@@ -1,7 +1,7 @@
 <?php
 // include 'header.php';
-require_once 'criteria.php';
-require_once 'alternatives.php';
+require_once 'view/criteria.php';
+require_once 'view/alternatives.php';
 
 // Mendapatkan daftar kriteria
 $criterias = getCriterias();
@@ -88,17 +88,13 @@ $topWP = getAlternative($topWPId);
 $topSAWId = key($sawResults);
 $topSAW = getAlternative($topSAWId);
 
-// Memeriksa apakah ada pencarian
-$searchTerm = '';
-if (isset($_POST['search'])) {
-    $searchTerm = $_POST['search'];  // Ambil kata kunci dari form pencarian
-    // Filter alternatif berdasarkan pencarian
-    $alternatives = array_filter($alternatives, function ($alternative) use ($searchTerm) {
-        return stripos($alternative['name'], $searchTerm) !== false; // Filter berdasarkan nama alternatif
-    });
-}
-?>
+// Handle search query
+$searchTerm = isset($_POST['search']) ? $_POST['search'] : '';
 
+$filteredAlternatives = array_filter($alternatives, function ($alternative) use ($searchTerm) {
+    return isset($alternative['name']) && stripos($alternative['name'], $searchTerm) !== false;
+});
+?>
 <style>
     /* General Button Styling */
     .button {
@@ -110,9 +106,9 @@ if (isset($_POST['search'])) {
 
     .button a {
         display: inline-block;
-        padding: 12px 20px;
+        padding: 10px 18px;
         border-radius: 8px;
-        font-size: 16px;
+        font-size: 14px;
         font-weight: bold;
         color: #fff;
         background-color: #e51b24;
@@ -122,46 +118,46 @@ if (isset($_POST['search'])) {
     }
 
     .button a:hover {
-        background-color: #e51b24;
+        background-color: #D81D26FF;
         transform: translateY(-2px);
         box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
     }
 
     /* Panel Styling */
     .panel {
-        padding: 20px;
+        padding: 15px;
         background: #f9f9f9;
         border-radius: 10px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .table-container {
-        width: 100%;
-        height: 250px;
-        /* Anda bisa mengatur tinggi sesuai kebutuhan */
-        overflow-y: auto;
+        max-width: 1200px;
+        /* Max width for the panel */
+        margin: 20px auto;
+        /* Center the panel */
     }
 
     /* Table Styling */
     table {
         width: 100%;
+        max-width: 100%;
         border-collapse: collapse;
-        margin-top: 10px;
-
+        margin-top: 20px;
+        overflow-x: auto;
+        /* Prevent table from overflowing */
     }
 
     table thead {
         background-color: #e51b24;
         color: #fff;
         text-align: left;
-
     }
 
     table th,
     table td {
-        padding: 12px;
+        padding: 10px;
         border: 1px solid #ddd;
         text-align: center;
+        font-size: 14px;
+        /* Smaller font size */
     }
 
     table tbody tr:nth-child(odd) {
@@ -180,74 +176,90 @@ if (isset($_POST['search'])) {
 
     .card-rank {
         background: #f5f5f5;
-        /* Warna latar belakang yang netral */
         border: 1px solid #ddd;
         border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         width: 100%;
-        margin: 10px auto;
+        margin: 20px auto;
         overflow: hidden;
     }
 
     .card-header {
         background-color: #e51b24;
-        /* Warna header tabel */
         color: white;
-        padding: 15px;
+        padding: 12px;
         text-align: center;
-        font-size: 20px;
-        /* Ukuran font lebih besar */
+        font-size: 18px;
+        /* Smaller font size for header */
         font-weight: bold;
     }
 
     .card-body {
         display: flex;
-        padding: 20px;
-        font-size: 16px;
-        /* Ukuran font isi */
+        padding: 15px;
+        font-size: 14px;
         color: #333;
     }
 
     .card-body p {
-        margin-bottom: 15px;
-        font-size: 18px;
-        /* Ukuran font untuk nama */
+        margin-bottom: 12px;
+        font-size: 16px;
+        /* Adjusted font size */
         font-weight: bold;
     }
 
     .card-body ul {
-        list-style-type: none;
-        /* Hilangkan bullet */
         width: 100%;
+        list-style-type: none;
         padding: 0;
         margin: 0;
     }
 
     .card-body ul li {
-        margin: 8px 0;
-        padding: 10px;
+        margin: 6px 0;
+        padding: 8px;
         background-color: #f9f9f9;
-        /* Warna latar belakang item */
         border: 1px solid #ddd;
-        /* Border untuk setiap item */
         border-radius: 4px;
-        font-size: 16px;
-        /* Ukuran font untuk nilai */
+        font-size: 14px;
+        /* Adjusted font size */
         color: #555;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        /* Efek bayangan */
     }
 
     .card-body ul li strong {
         color: #e51b24;
-        /* Warna untuk label nilai */
+    }
+
+    /* Make tables responsive */
+    @media (max-width: 768px) {
+        table {
+            font-size: 12px;
+            /* Smaller font size for small screens */
+        }
+
+        .button a {
+            font-size: 12px;
+            /* Smaller buttons */
+        }
+
+        .panel {
+            padding: 10px;
+        }
+
+        .card-header {
+            font-size: 16px;
+        }
+
+        .card-body p {
+            font-size: 14px;
+        }
     }
 
     .card-pie {
-        width: 60%;
+        width: 50%;
         background-color: white;
         border-radius: 10px;
-        margin: 10px;
+        margin: 20px;
         padding: 5px;
         border: 1px solid #e51b24;
     }
@@ -259,57 +271,30 @@ if (isset($_POST['search'])) {
         border: 1px solid #e51b24;
         margin: 10px;
     }
-
-    h3 {
-        color: black;
-        padding-top: 10px;
-    }
 </style>
 
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
 <div class="panel">
     <div class="button">
         <a href="#" onclick="showHasil('pros')">Proses Perhitungan</a>
         <a href="#" onclick="showHasil('wp')">Metode WP</a>
         <a href="#" onclick="showHasil('saw')">Metode SAW</a>
-        <a href="../console/print.php" style="background-color:#ffd700;">Cetak & Simpan</a>
     </div>
-    <div id="pros">
-        <details class="dropdown-normalisasi">
-            <summary>Tabel Ketentuan Bonus</summary>
-            <div class="table-responsive">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th>Nama Area</th>
-                            <th>sm</th>
-                            <th>m</th>
-                            <th>b</th>
-                            <th>cb</th>
-                            <th>ck</th>
-                        </tr>
-                    </thead>
-                    <?php
-                    include '../config/koneksi.php';
-
-                    $sql = mysqli_query($conn, "SELECT * FROM rangking");
-                    ?>
-                    <tbody>
-                        <?php
-                        while ($row = mysqli_fetch_array($sql)) {
-                            echo "<tr>";
-                            echo "<td>" . htmlspecialchars($row['area']) . "</td>";
-                            echo "<td>" . htmlspecialchars($row['sm']) . "</td>";
-                            echo "<td>" . htmlspecialchars($row['m']) . "</td>";
-                            echo "<td>" . htmlspecialchars($row['b']) . "</td>";
-                            echo "<td>" . htmlspecialchars($row['cb']) . "</td>";
-                            echo "<td>" . htmlspecialchars($row['ck']) . "</td>";
-                            echo "</tr>";
-                        }
-                        ?>
-                    </tbody>
-                </table>
+    <form method="POST">
+        <div class="input-group ml-1">
+            <input type="text" name="search" class="form-control" placeholder="Search..." value="<?= htmlspecialchars($searchTerm); ?>">
+            <div class="input-group-append">
+                <button class="btn btn-warning" type="submit">
+                    <i class="fas fa-search"></i>
+                </button>
             </div>
-        </details>
+        </div>
+    </form>
+    <div id="pros">
+
+
         <details class="dropdown-normalisasi">
             <summary>Proses Normalisasi</summary>
             <div>
@@ -424,128 +409,117 @@ if (isset($_POST['search'])) {
             <p><strong>Metode SAW:</strong> <?= $topSAW['name']; ?> dengan nilai <?= number_format($sawResults[$topSAWId], 4); ?></p>
         </div>
     </div>
-
+    <br>
     <div id="wp">
-
-        <h3>Hasil Penilaian WP</h3>
+        <h4>Hasil Penilaian WP</h4>
         <div class="table-responsive">
             <div class="card-rank">
-                <div class="card-header">
-                    <h5>Karyawan Terbaik</h5>
-                </div>
-
                 <div class="card-body">
-
-                    <!-- Elemen untuk Grafik Pie -->
                     <div class="card-pie">
                         <center>
-                            <p><strong>Nama:</strong> <?= $topWP['name']; ?></p>
-
-                            <canvas id="myPieChart1" width="200" height="200"></canvas>
+                            <canvas id="myPieChart1"></canvas>
                         </center>
                     </div>
                     <ul>
+                        <p><strong>Nama:</strong> <?= $topWP['name']; ?></p>
+
                         <?php foreach ($criterias as $criteria): ?>
                             <li>
-                                <strong><?= $criteria['name']; ?> (Value <?= $criteria['id']; ?>):</strong>
+                                <strong><?= $criteria['name']; ?> (value <?= $criteria['id']; ?>):</strong>
                                 <?= $topWP['value' . $criteria['id']]; ?>
                             </li>
                         <?php endforeach; ?>
-                        <div class="table-container">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Ranking</th>
-                                        <th>Nama Karyawan</th>
-                                        <th>Nilai S</th>
-                                        <th>Nilai Vektor V</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    $rank = 1;
-                                    foreach ($vVector as $alternativeId => $value) {
-                                        $alternative = getAlternative($alternativeId);
-                                        if ($searchTerm && stripos($alternative['name'], $searchTerm) === false) {
-                                            continue;  // Skip alternatif yang tidak cocok dengan pencarian
-                                        }
-                                        echo "<tr>";
-                                        echo "<td>" . $alternative['id'] . "</td>";
-                                        echo "<td>" . $rank . "</td>";
-                                        echo "<td>" . $alternative['name'] . "</td>";
-                                        echo "<td>" . $sVector[$alternative['id']] . "</td>";
-                                        echo "<td>" . $value . "</td>";
-                                        echo "</tr>";
-                                        $rank++;
-                                    }
-                                    ?>
-                                </tbody>
-                            </table>
-                        </div>
                     </ul>
+
                 </div>
             </div>
 
+            <!-- Urutkan alternatif berdasarkan nilai vektor V -->
+            <?php
+            usort($filteredAlternatives, function ($a, $b) use ($vVector) {
+                return $vVector[$b['id']] <=> $vVector[$a['id']]; // Urutkan berdasarkan nilai Vektor V
+            });
+            ?>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ranking</th>
+                        <th>Nama Karyawan</th>
+                        <th>Nilai S</th>
+                        <th>Nilai Vektor V</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $rank = 1;
+                    foreach ($filteredAlternatives as $alternativeId => $alternative) {
+                        echo "<tr>";
+                        echo "<td>" . $rank . "</td>";
+                        echo "<td>" . $alternative['name'] . "</td>";
+                        echo "<td>" . (isset($sVector[$alternative['id']]) ? $sVector[$alternative['id']] : 'N/A') . "</td>";
+                        echo "<td>" . (isset($vVector[$alternative['id']]) ? $vVector[$alternative['id']] : 'N/A') . "</td>";
+                        echo "</tr>";
+                        $rank++;
+                    }
+                    ?>
+                </tbody>
+            </table>
         </div>
     </div>
-
     <div id="saw">
-        <h3>Hasil Penilaian SAW</h3>
+        <h4>Hasil Penilaian SAW</h4>
         <div class="table-responsive">
             <div class="card-rank">
-                <div class="card-header">
-                    <h5>Karyawan Terbaik</h5>
-                </div>
-
                 <div class="card-body">
-                    <!-- Elemen untuk Grafik Pie -->
                     <div class="card-pie">
                         <center>
-                            <p><strong>Nama:</strong> <?= $topWP['name']; ?></p>
-                            <canvas id="myPieChart2" width="200" height="200"></canvas>
+                            <canvas id="myPieChart2"></canvas>
                         </center>
                     </div>
                     <ul>
+                        <p><strong>Nama:</strong> <?= $topWP['name']; ?></p>
+
                         <?php foreach ($criterias as $criteria): ?>
                             <li>
-                                <strong><?= $criteria['name']; ?> (Value <?= $criteria['id']; ?>):</strong>
+                                <strong><?= $criteria['name']; ?> (value <?= $criteria['id']; ?>):</strong>
                                 <?= $topWP['value' . $criteria['id']]; ?>
                             </li>
                         <?php endforeach; ?>
-                        <div class="table-container">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Ranking</th>
-                                        <th>Nama Karyawan</th>
-                                        <th>Nilai Akhir</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    $rank = 1;
-                                    foreach ($sawResults as $alternativeId => $value) {
-                                        $alternative = getAlternative($alternativeId);
-                                        if ($searchTerm && stripos($alternative['name'], $searchTerm) === false) {
-                                            continue;
-                                        }
-                                        echo "<tr>";
-                                        echo "<td>" . $alternative['id'] . "</td>";
-                                        echo "<td>" . $rank . "</td>";
-                                        echo "<td>" . $alternative['name'] . "</td>";
-                                        echo "<td>" . $value . "</td>";
-                                        echo "</tr>";
-                                        $rank++;
-                                    }
-                                    ?>
-                                </tbody>
-                            </table>
-                        </div>
                     </ul>
+
                 </div>
             </div>
+
+            <!-- Urutkan alternatif berdasarkan nilai SAW -->
+            <?php
+            usort($filteredAlternatives, function ($a, $b) use ($sawResults) {
+                return $sawResults[$b['id']] <=> $sawResults[$a['id']]; // Urutkan berdasarkan hasil SAW
+            });
+            ?>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ranking</th>
+                        <th>Nama Karyawan</th>
+                        <th>Nilai</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $rank = 1;
+                    foreach ($filteredAlternatives as $alternativeId => $alternative) {
+                        echo "<tr>";
+                        echo "<td>" . $rank . "</td>";
+                        echo "<td>" . $alternative['name'] . "</td>";
+                        echo "<td>" . (isset($sawResults[$alternative['id']]) ? $sawResults[$alternative['id']] : 'N/A') . "</td>";
+                        echo "</tr>";
+                        $rank++;
+                    }
+                    ?>
+                </tbody>
+            </table>
         </div>
     </div>
 
@@ -553,13 +527,20 @@ if (isset($_POST['search'])) {
 
 <script>
     function showHasil(method) {
-        // Hide all sections
-        document.getElementById('wp').style.display = 'none';
-        document.getElementById('saw').style.display = 'none';
-        document.getElementById('pros').style.display = 'none';
+        if (method === 'wp') {
+            document.getElementById('wp').style.display = 'block';
+            document.getElementById('saw').style.display = 'none';
+            document.getElementById('pros').style.display = 'none';
 
-        // Show the selected section
-        document.getElementById(method).style.display = 'block';
+        } else if (method === 'saw') {
+            document.getElementById('wp').style.display = 'none';
+            document.getElementById('pros').style.display = 'none';
+            document.getElementById('saw').style.display = 'block';
+        } else if (method === 'pros') {
+            document.getElementById('pros').style.display = 'block';
+            document.getElementById('wp').style.display = 'none';
+            document.getElementById('saw').style.display = 'none';
+        }
     }
 </script>
 <script>
@@ -600,7 +581,7 @@ if (isset($_POST['search'])) {
                 },
                 title: {
                     display: true,
-                    text: 'Grafik Winner',
+                    text: 'Grafik Pie WP',
                 },
                 tooltip: {
                     callbacks: {
@@ -654,7 +635,7 @@ if (isset($_POST['search'])) {
                 },
                 title: {
                     display: true,
-                    text: 'Grafik Winner',
+                    text: 'Grafik Pie SAW',
                 },
                 tooltip: {
                     callbacks: {

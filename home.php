@@ -13,6 +13,11 @@
             /* Warna latar belakang lembut */
         }
 
+        .navbar {
+            background: linear-gradient(45deg, #e51b24, #e51b24);
+            color: white;
+        }
+
         .welcome-card {
             background-color: white;
             border-radius: 15px;
@@ -33,7 +38,7 @@
 <body>
     <div class="container text-center mt-5">
         <div class="welcome-card">
-            <img src="img/unpam.png" width="200px" alt="UNPAM">
+            <img src="img/DKI.png" width="200px" alt="Bank DKI">
             <h3 class="mt-2">Halo, Selamat Datang!</h3>
             <p class="lead">Sistem Penunjang Keputusan Penilaian Kinerja Karyawan Berbasis Website</p>
             <p><strong>Dengan Visualisasi Data Menggunakan Metode</strong></p>

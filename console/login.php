@@ -11,7 +11,7 @@
     <style>
         /* Navbar styling */
         .navbar {
-            background: linear-gradient(45deg, #007bff, #17a2b8);
+            background: linear-gradient(45deg, #e51b24, #e51b24);
             color: white;
         }
 
@@ -58,18 +58,36 @@
         .navbar {
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+
+        /* DataRank hidden by default */
+        #dataRank {
+            display: none;
+        }
+
+        img {
+            width: 150px;
+            background-color: white;
+            border-radius: 20px;
+            padding: 5px;
+            padding-right: 10px;
+            padding-left: 10px;
+        }
     </style>
 </head>
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
-            <a class="navbar-brand" href="home.php">METODE WP & SAW</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <a class="navbar-brand" href="home.php"><img src="img/BANK DKI.png" alt="dki"></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
+            </button>
             </button>
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav ml-auto">
+                    <a class="nav-link" href="javascript:void(0);" onclick="showContent('home')"><i class="fas fa-home"></i> Home</a>
+                    <a class="nav-link" href="javascript:void(0);" onclick="showContent('dataRank')"><i class="fas fa-users"></i> Data Rangking</a>
+
                     <li class="nav-item">
                         <a class="nav-link" href="#" data-toggle="modal" data-target="#loginModal"><i class="fas fa-sign-in-alt"></i> Login</a>
                     </li>
@@ -103,17 +121,31 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary" form="loginForm">Login</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-warning" style="color:white;" form="loginForm">Login</button>
                 </div>
             </div>
         </div>
     </div>
 
+
+
     <!-- Tambahkan JS Bootstrap dan jQuery -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        // Fungsi untuk menampilkan konten
+        function showContent(id) {
+            // Menyembunyikan semua konten
+            document.getElementById('dataRank').style.display = 'none';
+            document.getElementById('home').style.display = 'none';
+
+            // Menampilkan konten yang dipilih
+            document.getElementById(id).style.display = 'block';
+        }
+    </script>
 </body>
 
 </html>
