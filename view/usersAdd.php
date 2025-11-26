@@ -17,27 +17,33 @@
         /* Lebar minimum untuk responsif */
     }
 </style>
+
 <div class="panel panel-container" style="padding: 20px; margin: 20px; box-shadow: 2px 2px 5px #888888;">
     <center>
         <h4>Add Users</h4>
     </center>
-    <details class="btn btn-light btn-block">
-        <summary>Tambah Data</summary><br>
-        <form action="../config/add_users.php" method="post">
+    <details id="formSection" class="btn btn-light btn-block">
+        <summary id="formTitle">Tambah Data</summary><br>
+
+        <form id="userForm" action="../config/add_users.php" method="post">
+            <input type="hidden" name="id" id="id_user">
+
             <div class="form-container">
                 <div class="kiri">
+
                     <div class="form-group">
-                        <label for="nik">NIK</label>
-                        <input type="text" class="form-control" name="nik" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="nama">Nama Lengkap</label>
-                        <input type="text" class="form-control" name="nama" required>
+                        <label>NIK</label>
+                        <input type="text" class="form-control" name="nik" id="nik" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="role">Jabatan</label>
-                        <select name="role" class="form-control" required>
+                        <label>Nama Lengkap</label>
+                        <input type="text" class="form-control" name="nama" id="nama" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Jabatan</label>
+                        <select name="role" class="form-control" id="role" required>
                             <option value="karyawan">FrontLiner</option>
                             <option value="admin">Admin Web</option>
                         </select>
@@ -46,24 +52,26 @@
                 </div>
 
                 <div class="kanan">
+
                     <div class="form-group">
-                        <label for="username">Username</label>
-                        <input type="text" class="form-control" name="username" required>
+                        <label>Username</label>
+                        <input type="text" class="form-control" name="username" id="username" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" class="form-control" name="password" required>
+                        <label>Password (kosongkan jika edit tanpa ganti password)</label>
+                        <input type="password" class="form-control" name="password" id="password">
                     </div>
 
-                    <div class="form-group">
-                        <label for="save">Simpan Data baru dan Lihat di bagian tabel!</label>
-                        <button type="submit" class="btn btn-outline-danger btn-block">Save</button>
-                    </div>
+                    <button type="submit" id="submitBtn" class="btn btn-outline-danger btn-block">
+                        Save
+                    </button>
+
                 </div>
             </div>
         </form>
     </details>
+
     <div class="table-responsive">
         <table class="table table-bordered">
             <thead>
@@ -71,6 +79,7 @@
                     <th>NIK</th>
                     <th>Name</th>
                     <th>Role</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <?php
@@ -81,14 +90,63 @@
             <tbody>
                 <?php
                 while ($row = mysqli_fetch_array($sql)) {
-                    echo "<tr>";
-                    echo "<td>" . htmlspecialchars($row['nik']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['nama']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['role']) . "</td>";
-                    echo "</tr>";
+                    echo "
+    <tr>
+        <td>" . htmlspecialchars($row['nik']) . "</td>
+        <td>" . htmlspecialchars($row['nama']) . "</td>
+        <td>" . htmlspecialchars($row['role']) . "</td>
+
+        <td>
+            <button class='btn btn-warning btn-sm' 
+                onclick='editUser(
+                    " . $row['id_users'] . ",
+                    \"" . $row['nik'] . "\",
+                    \"" . $row['nama'] . "\",
+                    \"" . $row['username'] . "\",
+                    \"" . $row['role'] . "\"
+                )'>
+                Edit
+            </button>
+
+            <a href='../config/delete_users.php?id=" . $row['id_users'] . "' 
+               onclick=\"return confirm('Yakin ingin menghapus user ini?')\"
+               class='btn btn-danger btn-sm'>
+               Delete
+            </a>
+        </td>
+    </tr>";
                 }
                 ?>
             </tbody>
+
         </table>
     </div>
 </div>
+
+<script>
+    function editUser(id, nik, nama, username, role) {
+        // Buka form otomatis
+        document.getElementById("formSection").open = true;
+
+        // Ubah judul
+        document.getElementById("formTitle").innerText = "Edit Data User";
+
+        // Isi form dengan data user
+        document.getElementById("id_user").value = id;
+        document.getElementById("nik").value = nik;
+        document.getElementById("nama").value = nama;
+        document.getElementById("username").value = username;
+        document.getElementById("role").value = role;
+
+        // Kosongkan password (user isi jika ingin ganti)
+        document.getElementById("password").value = "";
+
+        // Ubah aksi form dari tambah → edit
+        document.getElementById("userForm").action = "../config/edit_users.php";
+
+        // Ubah tombol Save menjadi Update
+        document.getElementById("submitBtn").innerText = "Update";
+        document.getElementById("submitBtn").classList.remove("btn-outline-danger");
+        document.getElementById("submitBtn").classList.add("btn-success");
+    }
+</script>
