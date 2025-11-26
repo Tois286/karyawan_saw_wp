@@ -4,10 +4,7 @@
 
     </center>
     <form action="../config/add_cabang.php" method="post">
-        <div class="form-group">
-            <label for="area">Nama cabang</label>
-            <input type="text" class="form-control" name="area" required>
-        </div>
+
         <div class="form-group">
             <label for="kota">Kota</label>
             <input type="text" class="form-control" name="kota" id="" required>
@@ -24,7 +21,6 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th>Nama Area</th>
                     <th>Kota</th>
                     <th>Alamat</th>
                 </tr>
@@ -38,7 +34,6 @@
                 <?php
                 while ($row = mysqli_fetch_array($sql)) {
                     echo "<tr>";
-                    echo "<td>" . htmlspecialchars($row['area']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['kota']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['alamat']) . "</td>";
                     echo "</tr>";

@@ -42,7 +42,7 @@
             <h3 class="mt-2">Halo, Selamat Datang!</h3>
             <p class="lead">Sistem Penunjang Keputusan Penilaian Kinerja Karyawan Berbasis Website</p>
             <p><strong>Dengan Visualisasi Data Menggunakan Metode</strong></p>
-            <h4 class="font-weight-bold">WP & SAW</h4>
+            <h4 class="font-weight-bold">SAW</h4>
         </div>
     </div>
 
@@ -53,5 +53,4 @@
 </body>
 
 </html>
-<br>
 <?php include 'console/footer.php' ?>

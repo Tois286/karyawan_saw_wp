@@ -30,15 +30,12 @@ if ($sql) {
                         <td align="right" width="50%"><strong>Username</strong></td>
                         <td align="left" width="50%"><?php echo isset($data['username']) ? htmlspecialchars($data['username']) : 'N/A'; ?></td>
                     </tr>
-                    <tr>
-                        <td align="right" width="50%"><strong>Role</strong></td>
-                        <td align="left" width="50%"><?php echo isset($data['role']) ? htmlspecialchars($data['role']) : 'N/A'; ?></td>
-                    </tr>
-                    <tr>
-                        <td align="right" width="50%"><strong>Area</strong></td>
-                        <td align="left" width="50%"><?php echo isset($data['role']) ? htmlspecialchars($data['area']) : 'N/A'; ?></td>
-                    </tr>
-                </tbody>
+                    
+                        <tr>
+                            <td align="right" width="50%"><strong>Role</strong></td>
+                            <td align="left" width="50%"><?php echo isset($data['role']) ? htmlspecialchars($data['role']) : 'N/A'; ?></td>
+                        </tr>
+                    </tbody>
             </table>
         </div>
     </div>

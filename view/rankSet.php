@@ -1,29 +1,6 @@
-<div class="panel panel-container" style="padding: 20px; box-shadow: 2px 2px 5px #888888;">
+<div class="panel panel-container" style="padding: 20px; margin: 20px; box-shadow: 2px 2px 5px #888888;">
+    <h3>Input Data Rank</h3>
     <form action="../config/add_rangking.php" method="post">
-        <div class="form-group">
-            <?php
-            // Koneksi ke database
-            include '../config/koneksi.php'; // Pastikan file ini ada dan berisi koneksi ke database
-
-            $query = "SELECT * FROM cabang";
-            $result = $conn->query($query);
-
-            if (!$result) {
-                die("Query gagal: " . $conn->error);
-            }
-            ?>
-            <div class="form-group">
-                <label for="id_cabang">Area</label>
-                <select name="id_cabang" class="form-control">
-                    <option value="">-- Pilih Area --</option>
-                    <?php while ($row = $result->fetch_assoc()): ?>
-                        <option value="<?= htmlspecialchars($row['id_cabang']); ?>">
-                            <?= htmlspecialchars($row['area']); ?>
-                        </option>
-                    <?php endwhile; ?>
-                </select>
-            </div>
-        </div>
         <div class="form-group">
             <label for="sm">Berapa banyak SM</label>
             <input type="number" class="form-control" name="sm" require>

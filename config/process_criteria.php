@@ -1,23 +1,17 @@
 <?php
-// Koneksi ke database
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "sawdanwp";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
 
 require_once '../view/criteria.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_GET['id'])) {
         // Proses update kriteria
-        $id = $_GET['id'];
-        $name = $_POST['name'];
-        $weight = $_POST['weight'];
-        $type = $_POST['type'];
+        $id = $_GET['id'] ?? '';
+        $name = $_POST['name'] ?? '';
+        $weight = $_POST['weight'] ?? '';
+        $type = $_POST['type'] ?? '';
+        $status = $_POST['status'] ?? '';
 
-        $result = updateCriteria($id, $name, $weight, $type);
+        $result = updateCriteria($id, $name, $weight, $type, $status);
         if ($result) {
             header('Location: ../view/dashboard.php');
             exit; // Pastikan skrip berhenti setelah header
@@ -26,11 +20,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     } else {
         // Proses tambah kriteria
-        $name = $_POST['name'];
-        $weight = $_POST['weight'];
-        $type = $_POST['type'];
+        $name = $_POST['name'] ?? '';
+        $weight = $_POST['weight'] ?? '';
+        $type = $_POST['type'] ?? '';
+        $status = $_POST['status'] ?? '';
 
-        $result = createCriteria($name, $weight, $type);
+        $result = createCriteria($name, $weight, $type, $status);
         if ($result) {
             header('Location: ../view/dashboard.php');
             exit; // Pastikan skrip berhenti setelah header

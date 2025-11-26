@@ -33,10 +33,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Redirect berdasarkan role
             if ($user['role'] === 'admin' || $user['role'] === 'superAdmin') {
                 header("Location: ../view/dashboard.php");
+            } else if ($user['role'] === 'karyawan') {
+                header("Location: ../view/dashboard.php");
             } else {
                 $_SESSION['error'] = "Role tidak dikenal!";
                 header("Location: ../index.php");
             }
+
             exit(); // Pastikan untuk keluar setelah redirect
         }
     }

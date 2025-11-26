@@ -78,7 +78,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
-            <a class="navbar-brand" href="home.php"><img src="img/BANK DKI.png" alt="dki"></a>
+            <a class="navbar-brand" href="javasript:void(0);" onclick="showContent('home')"><img src="img/BANK DKI.png" alt="dki"></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>

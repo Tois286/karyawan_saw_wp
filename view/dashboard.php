@@ -4,6 +4,30 @@ session_start();
 include '../console/header.php';
 
 ?>
+
+
+<?php
+$show = $_GET['show'] ?? 'home';
+?>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+
+        // Sembunyikan semua section
+        const sections = ["home", "profile", "nilai", "rangking", "usersAdd", "rankSet", "profileEdit", "cabang"];
+        sections.forEach(id => document.getElementById(id).style.display = "none");
+
+        // Tampilkan section sesuai parameter GET
+        const show = "<?php echo $show; ?>";
+        const section = document.getElementById(show);
+        if (section) {
+            section.style.display = "block";
+            section.scrollIntoView({
+                behavior: "smooth"
+            });
+        }
+    });
+</script>
 <style>
     body {
         background-color: #fff;
@@ -36,57 +60,51 @@ include '../console/header.php';
     }
 </style>
 
-<div class="container mt-4">
-    <div id="home">
-
-        <body>
-            <div class="container text-center mt-5">
-                <div class="welcome-card">
-                    <img src="../img/DKI.png" width="200px" alt="UNPAM">
-                    <h3 class="mt-2">Halo, Selamat Datang!</h3>
-                    <p class="lead">Sistem Penunjang Keputusan Penilaian Kinerja Karyawan Berbasis Website</p>
-                    <p><strong>Dengan Visualisasi Data Menggunakan Metode</strong></p>
-                    <h4 class="font-weight-bold">WP & SAW</h4>
-                </div>
-            </div>
-
-            <!-- Tambahkan JS Bootstrap dan jQuery -->
-            <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-        </body>
-
+<div id="home">
+    <div class="container text-center mt-4">
+        <div class="welcome-card">
+            <img src="../img/DKI.png" width="200px" alt="UNPAM">
+            <h3 class="mt-2">Halo, Selamat Datang!</h3>
+            <p class="lead">Sistem Penunjang Keputusan Penilaian Kinerja Karyawan Berbasis Website</p>
+            <p><strong>Dengan Visualisasi Data Menggunakan Metode</strong></p>
+            <h4 class="font-weight-bold">SAW</h4>
+        </div>
     </div>
-    <!-- Menampilkan Hasil Pencarian -->
-    <div id="profile">
-        <?php include '../view/profile.php'; ?>
-    </div>
-    <div id="nilai">
-        <?php include '../view/alternatif.php'; ?>
-        <br>
-        <?php include '../view/kriteria.php'; ?>
-    </div>
-    <div id="rangking">
-        <?php require_once '../view/hasil.php'; ?>
-    </div>
-
-    <div id="profileEdit">
-        <?php include '../view/profileEdit.php'; ?>
-    </div>
-
-    <div id="usersAdd">
-        <?php include '../view/usersAdd.php'; ?>
-    </div>
-
-    <div id="rankSet">
-        <?php include '../view/rankSet.php'; ?>
-    </div>
-
-    <div id="cabang">
-        <?php include '../view/cabang.php'; ?>
-    </div>
+    <?php include '../console/footer.php' ?>
 </div>
-<br>
-<?php
-include '../console/footer.php';
-?>
+<!-- Menampilkan Hasil Pencarian -->
+<div id="profile">
+    <?php include '../view/profile.php'; ?>
+    <?php include '../console/footer.php' ?>
+</div>
+<div id="nilai">
+    <?php include '../view/alternatif.php'; ?>
+    <br>
+    <?php if ($_SESSION['role'] === 'admin' || $_SESSION['role'] === 'superAdmin'): ?>
+        <?php include '../view/kriteria.php'; ?>
+    <?php endif; ?>
+    <?php include '../console/footer.php' ?>
+</div>
+<div id="rangking">
+    <?php require_once '../view/hasil.php'; ?>
+    <?php include '../console/footer.php' ?>
+</div>
+
+<div id="profileEdit">
+    <?php include '../view/profileEdit.php'; ?>
+    <?php include '../console/footer.php' ?>
+</div>
+
+<div id="usersAdd">
+    <?php include '../view/usersAdd.php'; ?>
+    <?php include '../console/footer.php' ?>
+</div>
+
+<div id="rankSet">
+    <?php include '../view/rankSet.php'; ?>
+    <?php include '../console/footer.php' ?>
+</div>
+
+<div id="cabang">
+    <?php include '../view/cabang.php'; ?>
+</div>

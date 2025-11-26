@@ -34,7 +34,7 @@
                 <center>
                     <strong>Keterangan Type</strong><br><br>
                     <p>Benefit, Semakin Banyak Bintang Semakin Tinggi Nilai Bobotnya Sedangkan Cost, Semakin Sedikit Bintang Semakin Tinggi Nilai Bobotnya.</p>
-                    <p>Kriteria Hanya dapat di isi hingga 5 kolom saja</p>
+                    <p>Kriteria Hanya dapat di isi hingga 12 kolom saja</p>
                 </center>
             </div><br>
             <div class="form-group">
@@ -65,6 +65,14 @@
                 </div>
             </div>
 
+            <div class="form-group">
+                <label for="status">Status Kriteria</label>
+                <select name="status" id="" class="form-control">
+                    <option value="kantor">Kantor</option>
+                    <option value="individu">Individu</option>
+                    <option value="normal">Normal</option>
+                </select>
+            </div>
 
             <script>
                 const stars = document.querySelectorAll('.star');
@@ -88,7 +96,7 @@
 
             <button type="submit" class="btn btn-primary btn-block">Tambah</button>
         </form>
-        <a href="../view/dashboard.php" class="back-link"><i class="fas fa-arrow-left"></i> Kembali</a>
+        <a href="../view/dashboard.php?show=nilai" class="back-link"><i class="fas fa-arrow-left"></i> Kembali</a>
     </div>
 </body>
 

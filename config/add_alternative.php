@@ -23,11 +23,10 @@ $criteriaNames = getCriteriaNames();
             foreach ($criteriaNames as $index => $criteriaName) :
             ?>
                 <div class="form-group">
-                    <label for="value<?php echo $index + 1; ?>">
+                    <label for="value<?php echo $index; ?>">
                         <?php echo ucfirst($criteriaName); ?>:
                     </label>
-                    <input type="number" class="form-control" name="value<?php echo $index + 1; ?>"
-                        id="value<?php echo $index + 1; ?>"
+                    <input type="number" class="form-control" name="value[]" id="value<?php echo $index; ?>"
                         step="0.01" placeholder="Masukkan nilai untuk <?php echo $criteriaName; ?>" required>
                 </div>
             <?php endforeach; ?>

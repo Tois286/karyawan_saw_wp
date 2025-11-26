@@ -271,12 +271,11 @@ if ($searchTerm) {
         }
 
         .card-pie {
-            width: 60%;
+            width: 30%;
             background-color: white;
             border-radius: 10px;
-            margin: 20px;
+            margin: 10px;
             padding: 5px;
-            border: 1px solid #e51b24;
         }
 
         .dropdown-normalisasi {
@@ -291,6 +290,12 @@ if ($searchTerm) {
             color: black;
             padding-top: 10px;
         }
+
+        @media print {
+            .button {
+                display: none;
+            }
+        }
     </style>
 </head>
 
@@ -304,7 +309,7 @@ if ($searchTerm) {
         <a href="#print" class="button-print">print</a>
     </div>
     <div>
-        <h3>Hasil Penilaian WP dan SAW</h3>
+        <h2>Hasil Penilaian WP dan SAW</h2>
         <div class="table-responsive">
             <div class="card-rank">
                 <div class="card-header">
@@ -313,61 +318,43 @@ if ($searchTerm) {
                 <div class="card-body">
                     <div class="card-pie">
                         <center>
-                            <canvas id="myPieChart1" width="200" height="200"></canvas>
+                            <canvas id="myPieChart1" width="100" height="100"></canvas>
                         </center>
                     </div>
                     <ul>
-                        <p><strong>Nama:</strong> <?= htmlspecialchars($topWP['name']); ?></p>
+                        <h1><strong>Nama:</strong> <?= htmlspecialchars($topWP['name'] ?? 'none'); ?></h1>
                         <?php foreach ($criterias as $criteria): ?>
                             <li>
-                                <strong><?= htmlspecialchars($criteria['name']); ?> (Value <?= $criteria['id']; ?>):</strong>
-                                <?= $topWP['value' . $criteria['id']]; ?>
+                                <strong><?= htmlspecialchars($criteria['name'] ?? 'none'); ?> (Value <?= $criteria['id'] ?? 'none'; ?>):</strong>
+                                Bintang <?= $topWP['value' . $criteria['id'] ?? 'kosong']; ?>
                             </li>
                         <?php endforeach; ?>
                     </ul>
                 </div>
             </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Ranking</th>
-                        <th>Nama Karyawan</th>
-                        <th>Nilai S</th>
-                        <th>Nilai V</th>
-                        <th>Nilai Akhir</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    $rank = 1;
-                    // Create a combined array to hold both WP and SAW results
-                    $combinedResults = [];
-                    foreach ($vVector as $alternativeId => $value) {
-                        $alternative = getAlternative($alternativeId);
-                        if ($searchTerm && stripos($alternative['name'], $searchTerm) === false) {
-                            continue;
-                        }
-                        $combinedResults[$alternativeId] = [
-                            'id' => htmlspecialchars($alternative['id']),
-                            'name' => htmlspecialchars($alternative['name']),
-                            'sValue' => $sVector[$alternativeId],
-                            'vValue' => $value,
-                            'wpRank' => $rank,
-                            'finalValue' => $value
+            <h2>Table Perhitungan</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Ranking</th>
+                            <th>Nama Karyawan</th>
+                            <th>Nilai S WP</th>
+                            <th>Nilai V WP</th>
+                            <th>Nilai Akhir SAW</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        include '../config/koneksi.php';
+                        $rank = 1;
+                        // Create a combined array to hold both WP and SAW results
+                        $combinedResults = [];
 
-                        ];
-                        $rank++;
-                    }
-
-                    // Add SAW results to the combined array
-                    $rank = 1;
-                    foreach ($sawResults as $alternativeId => $value) {
-                        if (isset($combinedResults[$alternativeId])) {
-                            $combinedResults[$alternativeId]['sawRank'] = $rank;
-                            $combinedResults[$alternativeId]['finalValue'] = $value;
-                        } else {
-                            // If the alternative is not in WP results, create an entry
+                        // Loop untuk WP results
+                        foreach ($vVector as $alternativeId => $value) {
                             $alternative = getAlternative($alternativeId);
                             if ($searchTerm && stripos($alternative['name'], $searchTerm) === false) {
                                 continue;
@@ -375,29 +362,84 @@ if ($searchTerm) {
                             $combinedResults[$alternativeId] = [
                                 'id' => htmlspecialchars($alternative['id']),
                                 'name' => htmlspecialchars($alternative['name']),
-                                'sValue' => null, // No WP value
-                                'vValue' => null, // No WP vector value
-                                'wpRank' => null, // No WP rank
+                                'sValue' => $sVector[$alternativeId],
+                                'vValue' => $value,
+                                'wpRank' => $rank,
                                 'finalValue' => $value
                             ];
+                            $rank++;
                         }
-                        $rank++;
-                    }
 
-                    // Display the combined results in the table
-                    foreach ($combinedResults as $result) {
-                        echo "<tr>";
-                        echo "<td>{$result['id']}</td>";
-                        echo "<td>" . ($result['wpRank'] ?? '-') . "</td>";
-                        echo "<td>{$result['name']}</td>";
-                        echo "<td>" . ($result['sValue'] ?? '-') . "</td>";
-                        echo "<td>" . ($result['vValue'] ?? '-') . "</td>";
-                        echo "<td>" . ($result['finalValue'] ?? '-') . "</td>";
-                        echo "</tr>";
-                    }
-                    ?>
-                </tbody>
-            </table>
+                        // Add SAW results to the combined array
+                        $rank = 1;
+                        foreach ($sawResults as $alternativeId => $value) {
+                            if (isset($combinedResults[$alternativeId])) {
+                                $combinedResults[$alternativeId]['sawRank'] = $rank;
+                                $combinedResults[$alternativeId]['finalValue'] = $value;
+                            } else {
+                                $alternative = getAlternative($alternativeId);
+                                if ($searchTerm && stripos($alternative['name'], $searchTerm) === false) {
+                                    continue;
+                                }
+                                $combinedResults[$alternativeId] = [
+                                    'id' => htmlspecialchars($alternative['id']),
+                                    'name' => htmlspecialchars($alternative['name']),
+                                    'sValue' => null, // No WP value
+                                    'vValue' => null, // No WP vector value
+                                    'wpRank' => null, // No WP rank
+                                    'finalValue' => $value
+                                ];
+                            }
+                            $rank++;
+                        }
+                        //jika nilai sm = 3 maka wpRank 1 sampai dengan 3 mendpatkan status SM
+                        $query = "SELECT * FROM rangking";
+                        $result = mysqli_query($connection, $query);
+
+                        $data = mysqli_fetch_assoc($result);
+                        $sm = $data['sm'];
+                        $m = $data['m'];
+                        $b = $data['b'];
+                        $cb = $data['cb'];
+                        $ck = $data['ck'];
+
+
+                        // Display the combined results in the table
+                        foreach ($combinedResults as $result) {
+                            echo "<tr>";
+                            echo "<td>{$result['id']}</td>";
+                            echo "<td>" . ($result['wpRank'] ?? '-') . "</td>";
+                            echo "<td>{$result['name']}</td>";
+                            echo "<td>" . ($result['sValue'] ?? '-') . "</td>";
+                            echo "<td>" . ($result['vValue'] ?? '-') . "</td>";
+                            echo "<td>" . ($result['finalValue'] ?? '-') . "</td>";
+
+                            // Determine status based on wpRank
+                            if (isset($result['wpRank'])) {
+                                if ($result['wpRank'] >= 1 && $result['wpRank'] <= $sm) {
+                                    $status = 'SM';
+                                } elseif ($result['wpRank'] > $sm && $result['wpRank'] <= ($sm + $m)) {
+                                    $status = 'M';
+                                } elseif ($result['wpRank'] > ($sm + $m) && $result['wpRank'] <= ($sm + $m + $b)) {
+                                    $status = 'B';
+                                } elseif ($result['wpRank'] > ($sm + $m + $b) && $result['wpRank'] <= ($sm + $m + $b + $cb)) {
+                                    $status = 'CB';
+                                } elseif ($result['wpRank'] > ($sm + $m + $b + $cb) && $result['wpRank'] <= ($sm + $m + $b + $cb + $ck)) {
+                                    $status = 'CK';
+                                } else {
+                                    $status = $data['status'] ?? '-'; // Default status
+                                }
+                            } else {
+                                $status = $data['status'] ?? '-'; // Default status if wpRank is not set
+                            }
+
+                            echo "<td>{$status}</td>"; // Display status
+                            echo "</tr>";
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

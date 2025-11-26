@@ -1,7 +1,7 @@
 <?php
 // File: criteria.php
-
 // Koneksi ke database
+require_once 'alternatives.php';
 $connection = new mysqli("localhost", "root", "", "sawdanwp");
 
 // Fungsi untuk mendapatkan data kriteria berdasarkan id
@@ -19,69 +19,67 @@ function getCriteria($id)
     return null;
 }
 
+
 // Fungsi Create
-function createCriteria($name, $weight, $type)
+function createCriteria($name, $weight, $type, $status)
 {
     global $connection;
 
-    // Mengecek jumlah entri yang ada di tabel criteria
-    $countQuery = "SELECT COUNT(*) AS total FROM criteria";
-    $countResult = $connection->query($countQuery);
-    $row = $countResult->fetch_assoc();
-
-    // Jika sudah ada 5 entri, jangan izinkan input lebih lanjut
-    if ($row['total'] >= 5) {
-        echo "<script>
-                alert('Anda hanya dapat menginput 5 kriteria saja.');
-                window.location.href = '../view/dashboard.php';
-              </script>";
-        return false;
-    }
-
-    // Mencari ID yang kosong dalam rentang 1 sampai 5
-    $missingId = null;
+    // Ambil semua ID yang sudah ada
     $query = "SELECT id FROM criteria ORDER BY id ASC";
     $result = $connection->query($query);
 
     $existingIds = [];
     while ($row = $result->fetch_assoc()) {
-        $existingIds[] = $row['id'];
+        $existingIds[] = (int)$row['id'];
     }
 
-    // Cari ID yang kosong
-    for ($i = 1; $i <= 5; $i++) {
+    // Cari ID yang kosong dalam rentang 1–10
+    $missingId = null;
+    for ($i = 1; $i <= 10; $i++) {
         if (!in_array($i, $existingIds)) {
             $missingId = $i;
             break;
         }
     }
 
-    // Menentukan ID yang akan digunakan
+    // Tentukan ID yang dipakai
     if ($missingId !== null) {
-        // Jika ada ID kosong, gunakan ID tersebut
-        $query = "INSERT INTO criteria (id, name, weight, type) VALUES ($missingId, '$name', $weight, '$type')";
+        // Jika ada ID kosong, pakai itu
+        $idToUse = $missingId;
     } else {
-        // Jika tidak ada ID kosong, masukkan data seperti biasa
-        $query = "INSERT INTO criteria (name, weight, type) VALUES ('$name', $weight, '$type')";
+        // Jika tidak ada ID kosong, ID baru = ID terbesar + 1
+        $idToUse = max($existingIds) + 1;
     }
 
-    // Menjalankan query insert
-    $result = $connection->query($query);
+    // Query insert dengan ID yang sudah ditentukan
+    $stmt = $connection->prepare("
+        INSERT INTO criteria (id, name, weight, type, status) 
+        VALUES (?, ?, ?, ?, ?)
+    ");
+    $stmt->bind_param("isdss", $idToUse, $name, $weight, $type, $status);
 
-    if ($result) {
+    if ($stmt->execute()) {
+
+        // Buat kolom baru di tabel alternatives
+        $newColumnName = "value" . $idToUse;
+        addColumnToAlternatives($newColumnName, 1);
+
         echo "<script>
                 alert('Data berhasil ditambahkan.');
-                window.location.href = '../view/dashboard.php';
+                window.location.href = '../view/dashboard.php?show=nilai';
               </script>";
     } else {
         echo "<script>
-                alert('Terjadi kesalahan: " . $connection->error . "');
-                window.location.href = '../view/dashboard.php';
+                alert('Terjadi kesalahan: " . $stmt->error . "');
+                window.location.href = '../view/dashboard.php?show=nilai';
               </script>";
     }
 
-    return $result;
+    return true;
 }
+
+
 
 
 // Fungsi Read
@@ -98,10 +96,10 @@ function getCriterias()
 }
 
 // Fungsi Update
-function updateCriteria($id, $name, $weight, $type)
+function updateCriteria($id, $name, $weight, $type, $status)
 {
     global $connection;
-    $query = "UPDATE criteria SET name='$name', weight=$weight, type='$type' WHERE id=$id";
+    $query = "UPDATE criteria SET name='$name', weight=$weight, type='$type', status ='$status' WHERE id=$id";
     $result = $connection->query($query);
     return $result;
 }

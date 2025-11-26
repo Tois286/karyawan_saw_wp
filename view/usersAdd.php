@@ -17,7 +17,7 @@
         /* Lebar minimum untuk responsif */
     }
 </style>
-<div class="panel panel-container" style="padding: 20px; box-shadow: 2px 2px 5px #888888;">
+<div class="panel panel-container" style="padding: 20px; margin: 20px; box-shadow: 2px 2px 5px #888888;">
     <center>
         <h4>Add Users</h4>
     </center>
@@ -27,39 +27,22 @@
             <div class="form-container">
                 <div class="kiri">
                     <div class="form-group">
+                        <label for="nik">NIK</label>
+                        <input type="text" class="form-control" name="nik" required>
+                    </div>
+                    <div class="form-group">
                         <label for="nama">Nama Lengkap</label>
                         <input type="text" class="form-control" name="nama" required>
-                    </div>
-                    <?php
-                    // Koneksi ke database
-                    require '../config/koneksi.php'; // Pastikan file ini ada dan berisi koneksi ke database
-
-                    $query = "SELECT * FROM cabang";
-                    $result = $conn->query($query);
-
-                    if (!$result) {
-                        die("Query gagal: " . $conn->error);
-                    }
-                    ?>
-                    <div class="form-group">
-                        <label for="area">Area</label>
-                        <select name="area" id="area" class="form-control">
-                            <option value="">-- Pilih Area --</option>
-                            <?php while ($row = $result->fetch_assoc()): ?>
-                                <option value="<?= htmlspecialchars($row['area']); ?>">
-                                    <?= htmlspecialchars($row['area']); ?>
-                                </option>
-                            <?php endwhile; ?>
-                        </select>
                     </div>
 
                     <div class="form-group">
                         <label for="role">Jabatan</label>
                         <select name="role" class="form-control" required>
-                            <option value="admin">Kepala Cabang</option>
-                            <option value="superAdmin">Admin Kantor Pusat</option>
+                            <option value="karyawan">FrontLiner</option>
+                            <option value="admin">Admin Web</option>
                         </select>
                     </div>
+
                 </div>
 
                 <div class="kanan">
@@ -85,9 +68,9 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
+                    <th>NIK</th>
                     <th>Name</th>
                     <th>Role</th>
-                    <th>Area</th>
                 </tr>
             </thead>
             <?php
@@ -99,9 +82,9 @@
                 <?php
                 while ($row = mysqli_fetch_array($sql)) {
                     echo "<tr>";
+                    echo "<td>" . htmlspecialchars($row['nik']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['nama']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['role']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['area']) . "</td>";
                     echo "</tr>";
                 }
                 ?>

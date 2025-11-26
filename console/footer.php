@@ -1,4 +1,4 @@
-<footer class="text-white text-center py-4 mt-5" style="background-color:#e51b24;">
+<footer class="text-white text-center py-4 mt-5" style="background-color:#e51b24;width:100%;">
     <div class="container">
         <span>&copy; 2025 - UNIVERSITAS PAMULANG</span>
         <div class="social-icons mt-3">

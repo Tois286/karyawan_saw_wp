@@ -4,10 +4,10 @@ require_once 'criteria.php';
 $criterias = getCriterias();
 ?>
 
-<div class="panel panel-container" style="padding: 20px; box-shadow: 2px 2px 5px #888888;">
+<div class="panel panel-container" style="padding: 20px; margin:20px; box-shadow: 2px 2px 5px #888888;">
     <h4>Tabel Kriteria</h4>
     <a href="../config/add_criteria.php" class="btn btn-warning" style="color:white;"><span class="fa fa-plus"></span>&emsp; Tambah Data</a>
-    <div class="table-responsive">
+    <div class="table-responsive table-container">
         <table class="table table-bordered">
             <thead>
                 <tr>
@@ -15,23 +15,31 @@ $criterias = getCriterias();
                     <th>Nama Kriteria</th>
                     <th>Bobot</th>
                     <th>Tipe</th>
+                    <th>Status kriteria</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
 
             <tbody>
-                <?php foreach ($criterias as $criteria) : ?>
+                <?php if (empty($criterias)): ?>
                     <tr>
-                        <td class="text-center"><?php echo $criteria['id']; ?></td>
-                        <td class="text-center"><?php echo $criteria['name']; ?></td>
-                        <td class="text-center"><?php echo $criteria['weight']; ?></td>
-                        <td class="text-center"><?php echo $criteria['type']; ?></td>
-                        <td class="text-center">
-                            <a href="../config/edit_criteria.php?id=<?php echo $criteria['id']; ?>&aksi=ubah" class="btn btn-warning" style="color:white;"><span class="fa fa-pencil"></span> Edit</a>
-                            <a href="../config/delete_criteria.php?id=<?php echo $criteria['id']; ?> &proses=proses-hapus" class="btn btn-danger"><span class="fa fa-trash"></span>Hapus</a>
-                        </td>
+                        <td colspan="<?= count($criterias) + 6; ?>" class="text-center">Tidak ada hasil ditemukan.</td>
                     </tr>
-                <?php endforeach; ?>
+                <?php else: ?>
+                    <?php foreach ($criterias as $criteria) : ?>
+                        <tr>
+                            <td class="text-center"><?php echo $criteria['id'] ?? ''; ?></td>
+                            <td class="text-center"><?php echo $criteria['name'] ?? ''; ?></td>
+                            <td class="text-center"><?php echo $criteria['weight'] ?? ''; ?></td>
+                            <td class="text-center"><?php echo $criteria['type'] ?? ''; ?></td>
+                            <td class="text-center"><?php echo $criteria['status'] ?? ''; ?></td>
+                            <td class="text-center">
+                                <a href="../config/edit_criteria.php?id=<?php echo $criteria['id']; ?>&aksi=ubah" class="btn btn-warning" style="color:white;"><span class="fa fa-pencil"></span> Edit</a>
+                                <a href="../config/delete_criteria.php?id=<?php echo $criteria['id']; ?> &proses=proses-hapus" class="btn btn-danger"><span class="fa fa-trash"></span>Hapus</a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </tbody>
         </table>
     </div>

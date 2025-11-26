@@ -29,6 +29,15 @@
                         <option value="cost" <?php if ($criteria['type'] === 'cost') echo 'selected'; ?>>Cost</option>
                     </select>
                 </div>
+
+                <div class="form-group">
+                    <label for="status">Status Kriteria</label>
+                    <select name="status" id="" class="form-control">
+                        <option value="individu">Individu</option>
+                        <option value="kantor">Kantor</option>
+                        <option value="normal">normal</option>
+                    </select>
+                </div>
                 <button type="submit" class="btn btn-primary">Simpan</button>
             </form>
         <?php
@@ -37,7 +46,7 @@
         }
         ?>
 
-        <a href="../view/dashboard.php" class="back-link"><i class="fas fa-arrow-left"></i> Kembali</a>
+        <a href="../view/dashboard.php?show=nilai" class="back-link"><i class="fas fa-arrow-left"></i> Kembali</a>
 
     </div>
 </body>
